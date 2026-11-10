@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIM SONW - ExTrackLy Game Booster</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090a0f',
+                        cardBg: '#15171e',
+                        accentBlue: '#3b82f6',
+                        accentGreen: '#10b981',
+                        accentRed: '#ef4444',
+                        accentPurple: '#8b5cf6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050608;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Phone frame wrapper container */
+        .phone-container {
+            max-width: 420px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #0d0f14 0%, #050608 100%);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(59, 130, 246, 0.15);
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Avatar Glow */
+        .avatar-glow {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), 0 0 10px rgba(139, 92, 246, 0.4);
+            border: 2px solid #38bdf8;
+        }
+
+        /* Custom Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #374151;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        input:checked + .slider {
+            background-color: #22c55e;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Modal Slide In Effect */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            transition: opacity 0.25s ease-out;
+        }
+
+        .card-glow-blue {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            border: 2px solid #3b82f6 !important;
+        }
+
+        .toast-pop {
+            animation: toastAnimation 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes toastAnimation {
+            0% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
+            100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+        }
+
+        /* Matrix scrollbar */
+        .console-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .console-scroll::-webkit-scrollbar-thumb {
+            background: #22c55e;
+            border-radius: 4px;
+        }
+
+        /* Ripple Animation */
+        .pulse-ring {
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container relative pb-10 min-h-screen">
+        
+        <!-- Status Bar Simulation -->
+        <div class="flex justify-between items-center px-6 pt-3 text-xs text-gray-300 font-semibold select-none z-10">
+            <span id="current-time">18:29</span>
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid font-bold text-xs">5G</i>
+                <i class="fa-solid fa-signal text-xs"></i>
+                <i class="fa-solid fa-wifi text-xs"></i>
+                <i class="fa-solid fa-battery-full text-sm"></i>
+            </div>
+        </div>
+
+        <!-- Header Navbar -->
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-900/60 z-10">
+            <button class="flex items-center text-gray-200 font-medium text-base hover:text-white transition" onclick="showToast('Đang quay lại...')">
+                <i class="fa-solid fa-chevron-left mr-2 text-sm"></i> Back
+            </button>
+            <div class="text-center">
+                <h1 class="text-lg font-extrabold tracking-wider text-white uppercase">KIM SONW</h1>
+                <p class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold">BY KIM SONW</p>
+            </div>
+            <button class="text-white text-xl hover:text-gray-300 transition" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="px-5 py-6 flex-1 flex flex-col justify-between">
+
+            <!-- Profile Avatar Section -->
+            <div class="flex flex-col items-center my-4">
+                <div class="relative">
+                    <img src="https://placehold.co/120x120/1e1b4b/38bdf8?text=KIM+SONW" 
+                         alt="Avatar" 
+                         class="w-28 h-28 rounded-full object-cover avatar-glow transition transform hover:scale-105 duration-300"
+                         onerror="this.src='https://placehold.co/120x120/101827/38bdf8?text=Anime'">
+                </div>
+            </div>
+
+            <!-- Toggles Control List Card -->
+            <div class="bg-[#14161d]/90 backdrop-blur-md rounded-3xl p-5 border border-gray-800/80 shadow-2xl space-y-5">
+                
+                <!-- Item 1: EXTRACTLY -->
+                <div class="flex items-center justify-between pb-4 border-b border-gray-800/60">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="openExtractlyModal()">
+                        <span class="text-2xl">💀</span>
+                        <span class="font-bold tracking-wide text-sm text-gray-100">EXTRACTLY</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-extractly" onchange="handleToggle('extractly', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Item 2: REG FILES -->
+                <div class="flex items-center justify-between pb-4 border-b border-gray-800/60">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="openRegFilesModal()">
+                        <span class="text-2xl">🎯</span>
+                        <span class="font-bold tracking-wide text-sm text-gray-100">REG FILES</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-reg" onchange="handleToggle('reg', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Item 3: BOST RAM -->
+                <div class="flex items-center justify-between pb-4 border-b border-gray-800/60">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="openBostRamModal()">
+                        <span class="text-2xl">🚀</span>
+                        <span class="font-bold tracking-wide text-sm text-gray-100">BOST RAM</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-bost" onchange="handleToggle('bost', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Item 4: FIX RUNG -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="openFixRungModal()">
+                        <span class="text-2xl">⚙️</span>
+                        <span class="font-bold tracking-wide text-sm text-gray-100">FIX RUNG</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-fixrung" onchange="handleToggle('fixrung', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- Bottom Master Switch Section: STARTING FILES -->
+            <div class="mt-8 text-center">
+                <p class="text-xs font-extrabold tracking-widest text-gray-400 mb-3 uppercase">STARTING FILES</p>
+                <div class="bg-[#1a1d26] p-1.5 rounded-2xl flex items-center justify-between border border-gray-800 max-w-sm mx-auto shadow-inner">
+                    <button id="btn-on" onclick="setStartingFiles(true)" 
+                            class="w-1/2 py-3 rounded-xl font-bold text-sm transition-all duration-300 text-gray-400">
+                        ON
+                    </button>
+                    <button id="btn-off" onclick="setStartingFiles(false)" 
+                            class="w-1/2 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-lg">
+                        OFF
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Info -->
+        <div class="text-center py-2 text-[11px] text-gray-500">
+            KIM SONW Optimization Engine v2.4
+        </div>
+    </div>
+
+    <!-- ================= MODALS & POPUPS ================= -->
+
+    <!-- 1. EXTRACTLY MAIN CONFIG MODAL -->
+    <div id="modal-extractly-config" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div class="w-full max-w-sm bg-[#111319] rounded-3xl border border-blue-500/40 p-5 shadow-2xl space-y-5 relative animate-fade-in">
+            
+            <!-- Header Status -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+                <div class="flex items-center space-x-3">
+                    <span class="text-3xl">💀</span>
+                    <div>
+                        <h3 class="font-black tracking-wide text-base text-white">EXTRACTLY READY</h3>
+                        <p class="text-xs text-gray-400 font-medium">Cấu hình khởi chạy game</p>
+                    </div>
+                </div>
+                <span class="flex items-center text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-600/50 px-2.5 py-1 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> ONLINE
+                </span>
+            </div>
+
+            <!-- Operating System Select -->
+            <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2.5 flex items-center">
+                    <span class="mr-1.5">📱</span> HỆ ĐIỀU HÀNH:
+                </label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="os-android" onclick="selectOS('android')" 
+                            class="p-3 bg-[#191c26] border border-gray-700/60 rounded-2xl flex flex-col items-center justify-center space-y-1 hover:border-blue-500 transition">
+                        <span class="text-xl">🤖</span>
+                        <span class="font-bold text-sm">Android</span>
+                        <span class="text-[10px] text-gray-400">APK / Direct</span>
+                    </button>
+
+                    <button id="os-ios" onclick="selectOS('ios')" 
+                            class="p-3 bg-gradient-to-b from-blue-600 to-blue-700 border border-blue-400 rounded-2xl flex flex-col items-center justify-center space-y-1 shadow-lg shadow-blue-600/30 card-glow-blue">
+                        <span class="text-xl">🍏</span>
+                        <span class="font-bold text-sm">iOS</span>
+                        <span class="text-[10px] text-blue-100">iPhone / iPad</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Free Fire Version Select -->
+            <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2.5 flex items-center">
+                    <span class="mr-1.5">🎮</span> PHIÊN BẢN FREE FIRE:
+                </label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="ff-normal" onclick="selectFF('normal')" 
+                            class="p-3 bg-gradient-to-b from-blue-600 to-blue-700 border border-blue-400 rounded-2xl flex flex-col items-center justify-center space-y-1 shadow-lg shadow-blue-600/30 card-glow-blue">
+                        <span class="text-xl">🔥</span>
+                        <span class="font-bold text-sm">Free Fire</span>
+                        <span class="text-[10px] text-blue-100">Bản thường</span>
+                    </button>
+
+                    <button id="ff-max" onclick="selectFF('max')" 
+                            class="p-3 bg-[#191c26] border border-gray-700/60 rounded-2xl flex flex-col items-center justify-center space-y-1 hover:border-blue-500 transition">
+                        <span class="text-xl">⚡</span>
+                        <span class="font-bold text-sm">Free Fire Max</span>
+                        <span class="text-[10px] text-gray-400">Bản Max Ultra</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3 pt-2">
+                <button onclick="launchGame()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-extrabold rounded-2xl text-base tracking-wider shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 transition transform active:scale-95">
+                    <span>🚀</span>
+                    <span>VÀO GAME NGAY</span>
+                </button>
+                <button onclick="closeModal('modal-extractly-config')" class="w-full py-3 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 text-rose-300 font-bold rounded-2xl text-sm transition">
+                    ✕ Tắt Extractly
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. SUCCESS CHECKMARK MODAL -->
+    <div id="modal-success" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div class="w-full max-w-xs bg-[#171922] rounded-3xl overflow-hidden border border-gray-800 shadow-2xl animate-fade-in">
+            <!-- Dynamic Modal Header -->
+            <div id="success-header" class="py-3.5 px-4 text-center font-bold text-white text-base flex items-center justify-center space-x-2">
+                <span id="success-header-icon">⚙️</span>
+                <span id="success-header-title">Kích hoạt FIX RUNG</span>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 flex flex-col items-center text-center space-y-4">
+                <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center pulse-ring shadow-lg shadow-emerald-500/40">
+                    <i class="fa-solid fa-check text-4xl text-white"></i>
+                </div>
+                <h2 id="success-main-text" class="text-xl font-extrabold text-emerald-400 tracking-wide leading-snug">
+                    FIX RUNG thành công!
+                </h2>
+                <button onclick="closeModal('modal-success')" class="px-8 py-2.5 bg-gray-200 hover:bg-white text-gray-900 font-bold rounded-xl text-sm shadow transition active:scale-95">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. REG FILES TERMINAL LOG MODAL -->
+    <div id="modal-reg-files" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div class="w-full max-w-xs bg-[#14161f] rounded-3xl overflow-hidden border border-blue-600/40 shadow-2xl animate-fade-in">
+            <!-- Header -->
+            <div class="bg-blue-600 py-3.5 px-4 text-center font-bold text-white text-base flex items-center justify-center space-x-2 shadow-md">
+                <span>🎯</span>
+                <span>Cài đặt REG FILES</span>
+            </div>
+
+            <!-- Terminal Box Content -->
+            <div class="p-4">
+                <div class="bg-[#0b0c10] border border-gray-800 rounded-2xl p-4 font-mono text-xs text-emerald-400 space-y-3 console-scroll max-h-60 overflow-y-auto leading-relaxed shadow-inner">
+                    <div class="flex items-start space-x-1">
+                        <span class="text-blue-400 font-bold">$</span>
+                        <p id="log-1" class="hidden">Reading Free Fire touch configuration...</p>
+                    </div>
+                    <div class="flex items-start space-x-1">
+                        <span class="text-blue-400 font-bold">$</span>
+                        <p id="log-2" class="hidden">Calibrating DPI & 120Hz polling rate...</p>
+                    </div>
+                    <div class="flex items-start space-x-1">
+                        <span class="text-blue-400 font-bold">$</span>
+                        <p id="log-3" class="hidden">Injecting VIP AimAssist Registry keys...</p>
+                    </div>
+                    <div class="flex items-start space-x-1">
+                        <span class="text-blue-400 font-bold">$</span>
+                        <p id="log-4" class="hidden">Applying smooth tracking sensitivity...</p>
+                    </div>
+                </div>
+
+                <button onclick="closeModal('modal-reg-files')" class="w-full mt-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl text-sm transition">
+                    Đóng Console
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION OVERLAY -->
+    <div id="toast-overlay" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 w-64 bg-[#3b9bdc] text-white font-semibold text-center py-3.5 px-5 rounded-2xl shadow-xl border border-blue-300/40 hidden toast-pop">
+        <span id="toast-message" class="text-sm tracking-wide">Đã bật FIX RUNG</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-time').innerText = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast-overlay');
+            const toastMsg = document.getElementById('toast-message');
+            
+            toastMsg.innerText = message;
+            toast.classList.remove('hidden');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+
+        function handleToggle(type, isChecked) {
+            if (!isChecked) {
+                showToast(`Đã tắt ${type.toUpperCase()}`);
+                return;
+            }
+
+            switch(type) {
+                case 'extractly':
+                    showSuccessModal('💀', 'Kích hoạt EXTRACTLY', 'bg-gradient-to-r from-red-600 to-rose-700', 'EXTRACTLY thành công!');
+                    showToast('Đã bật EXTRACTLY');
+                    break;
+                case 'reg':
+                    openRegFilesModal();
+                    showToast('Đã bật REG FILES');
+                    break;
+                case 'bost':
+                    showSuccessModal('🚀', 'Tối ưu hệ thống', 'bg-blue-600', 'BOST RAM thành công!');
+                    showToast('Đã bật BOST RAM');
+                    break;
+                case 'fixrung':
+                    showSuccessModal('⚙️', 'Kích hoạt FIX RUNG', 'bg-purple-600', 'FIX RUNG thành công!');
+                    showToast('Đã bật FIX RUNG');
+                    break;
+            }
+        }
+
+        function showSuccessModal(icon, title, headerClass, mainText) {
+            const header = document.getElementById('success-header');
+            header.className = `py-3.5 px-4 text-center font-bold text-white text-base flex items-center justify-center space-x-2 ${headerClass}`;
+            document.getElementById('success-header-icon').innerText = icon;
+            document.getElementById('success-header-title').innerText = title;
+            document.getElementById('success-main-text').innerText = mainText;
+
+            document.getElementById('modal-success').classList.remove('hidden');
+        }
+
+        function openExtractlyModal() {
+            document.getElementById('modal-extractly-config').classList.remove('hidden');
+        }
+
+        function openRegFilesModal() {
+            document.getElementById('modal-reg-files').classList.remove('hidden');
+            const logs = ['log-1', 'log-2', 'log-3', 'log-4'];
+            
+            logs.forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            logs.forEach((id, index) => {
+                setTimeout(() => {
+                    document.getElementById(id).classList.remove('hidden');
+                }, (index + 1) * 350);
+            });
+        }
+
+        function openBostRamModal() {
+            document.getElementById('toggle-bost').checked = true;
+            handleToggle('bost', true);
+        }
+
+        function openFixRungModal() {
+            document.getElementById('toggle-fixrung').checked = true;
+            handleToggle('fixrung', true);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function setStartingFiles(isOn) {
+            const btnOn = document.getElementById('btn-on');
+            const btnOff = document.getElementById('btn-off');
+            const allToggles = ['toggle-extractly', 'toggle-reg', 'toggle-bost', 'toggle-fixrung'];
+
+            if (isOn) {
+                btnOn.className = "w-1/2 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-lg";
+                btnOff.className = "w-1/2 py-3 rounded-xl font-bold text-sm transition-all duration-300 text-gray-400";
+                
+                allToggles.forEach(id => {
+                    document.getElementById(id).checked = true;
+                });
+                showToast('Đã bật tất cả STARTING FILES');
+            } else {
+                btnOff.className = "w-1/2 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-lg";
+                btnOn.className = "w-1/2 py-3 rounded-xl font-bold text-sm transition-all duration-300 text-gray-400";
+                
+                allToggles.forEach(id => {
+                    document.getElementById(id).checked = false;
+                });
+                showToast('Đã tắt tất cả STARTING FILES');
+            }
+        }
+
+        function selectOS(type) {
+            const androidBtn = document.getElementById('os-android');
+            const iosBtn = document.getElementById('os-ios');
+
+            const activeClass = "p-3 bg-gradient-to-b from-blue-600 to-blue-700 border border-blue-400 rounded-2xl flex flex-col items-center justify-center space-y-1 shadow-lg shadow-blue-600/30 card-glow-blue";
+            const inactiveClass = "p-3 bg-[#191c26] border border-gray-700/60 rounded-2xl flex flex-col items-center justify-center space-y-1 hover:border-blue-500 transition";
+
+            if (type === 'android') {
+                androidBtn.className = activeClass;
+                iosBtn.className = inactiveClass;
+                iosBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-gray-400";
+                androidBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-blue-100";
+            } else {
+                iosBtn.className = activeClass;
+                androidBtn.className = inactiveClass;
+                androidBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-gray-400";
+                iosBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-blue-100";
+            }
+        }
+
+        function selectFF(type) {
+            const normalBtn = document.getElementById('ff-normal');
+            const maxBtn = document.getElementById('ff-max');
+
+            const activeClass = "p-3 bg-gradient-to-b from-blue-600 to-blue-700 border border-blue-400 rounded-2xl flex flex-col items-center justify-center space-y-1 shadow-lg shadow-blue-600/30 card-glow-blue";
+            const inactiveClass = "p-3 bg-[#191c26] border border-gray-700/60 rounded-2xl flex flex-col items-center justify-center space-y-1 hover:border-blue-500 transition";
+
+            if (type === 'normal') {
+                normalBtn.className = activeClass;
+                maxBtn.className = inactiveClass;
+                maxBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-gray-400";
+                normalBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-blue-100";
+            } else {
+                maxBtn.className = activeClass;
+                normalBtn.className = inactiveClass;
+                normalBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-gray-400";
+                maxBtn.querySelector('span:nth-child(3)').className = "text-[10px] text-blue-100";
+            }
+        }
+
+        function launchGame() {
+            closeModal('modal-extractly-config');
+            showToast('🚀 Đang khởi chạy Free Fire...');
+        }
+
+        function toggleMenu() {
+            showToast('Menu tùy chỉnh KIM SONW');
+        }
+    </script>
+
+</body>
+</html>
